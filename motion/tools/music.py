@@ -131,7 +131,8 @@ voice = hp(voice, 70)
 voice = voice / (np.max(np.abs(voice)) + 1e-9) * .85
 # duck music under voice
 envv = np.abs(voice); win = int(.25 * SR)
-envv = np.convolve(envv, np.ones(win) / win, 'same')
+cs = np.concatenate([[0], np.cumsum(envv)]); idx = np.arange(N)
+envv = (cs[np.clip(idx + win // 2, 0, N)] - cs[np.clip(idx - win // 2, 0, N)]) / win
 duck = 1 - .55 * np.clip(envv / .06, 0, 1)
 music = music / (np.max(np.abs(music)) + 1e-9) * .32 * duck
 sfx = sfx / (np.max(np.abs(sfx)) + 1e-9) * .4
