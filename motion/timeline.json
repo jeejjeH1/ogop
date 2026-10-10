@@ -1,0 +1,236 @@
+{
+ "scenes": [
+  {
+   "id": "s1",
+   "start": 0.0,
+   "end": 6.091,
+   "cues": [
+    {
+     "t": 1.6,
+     "d": 3.491,
+     "text": "A major development, at the intersection of Trad-Fi and Dee-Fi."
+    }
+   ]
+  },
+  {
+   "id": "s2",
+   "start": 6.091,
+   "end": 17.014,
+   "cues": [
+    {
+     "t": 6.591,
+     "d": 3.188,
+     "text": "Star-tale has introduced digital corporate bonds in Japan."
+    },
+    {
+     "t": 10.029,
+     "d": 6.185,
+     "text": "Bonds that pay both interest and principal, using J P Y S C, a Japanese yen stablecoin."
+    }
+   ]
+  },
+  {
+   "id": "s3",
+   "start": 17.014,
+   "end": 21.35,
+   "cues": [
+    {
+     "t": 17.414,
+     "d": 3.037,
+     "text": "But why does this matter, beyond another financial product?"
+    }
+   ]
+  },
+  {
+   "id": "s4",
+   "start": 21.35,
+   "end": 39.16,
+   "cues": [
+    {
+     "t": 21.75,
+     "d": 1.116,
+     "text": "First, the key numbers."
+    },
+    {
+     "t": 23.066,
+     "d": 2.406,
+     "text": "A five percent annual yield, before tax."
+    },
+    {
+     "t": 25.622,
+     "d": 0.95,
+     "text": "A one-year term."
+    },
+    {
+     "t": 26.722,
+     "d": 2.518,
+     "text": "A minimum investment of one hundred thousand yen."
+    },
+    {
+     "t": 29.39,
+     "d": 2.883,
+     "text": "Total issuance of ninety-nine point nine million yen."
+    },
+    {
+     "t": 32.423,
+     "d": 2.23,
+     "text": "Maturing in December, twenty twenty-seven."
+    },
+    {
+     "t": 34.953,
+     "d": 3.408,
+     "text": "And the bonds are guaranteed by the parent company, Star-tale Group."
+    }
+   ]
+  },
+  {
+   "id": "s5",
+   "start": 39.16,
+   "end": 58.4,
+   "cues": [
+    {
+     "t": 39.56,
+     "d": 1.406,
+     "text": "So, where is the innovation?"
+    },
+    {
+     "t": 41.166,
+     "d": 4.528,
+     "text": "Traditional bonds rely on conventional banking rails, for interest and principal."
+    },
+    {
+     "t": 45.844,
+     "d": 6.956,
+     "text": "Star-tale Bond pays them in J P Y S C, a yen stablecoin issued by S B I Shinsei Trust Bank."
+    },
+    {
+     "t": 53.05,
+     "d": 4.55,
+     "text": "Moving blockchain beyond crypto trading, and into real-world corporate financing."
+    }
+   ]
+  },
+  {
+   "id": "s6",
+   "start": 58.4,
+   "end": 74.712,
+   "cues": [
+    {
+     "t": 58.8,
+     "d": 1.27,
+     "text": "Why should we pay attention?"
+    },
+    {
+     "t": 60.22,
+     "d": 4.798,
+     "text": "For stablecoins to become financial infrastructure, fast payments alone are not enough."
+    },
+    {
+     "t": 65.168,
+     "d": 5.351,
+     "text": "They need real applications. Bond markets. Interest payments. Tokenized asset settlement."
+    },
+    {
+     "t": 70.719,
+     "d": 3.193,
+     "text": "Star-tale Bond is a practical example of this direction."
+    }
+   ]
+  },
+  {
+   "id": "s7",
+   "start": 74.712,
+   "end": 92.771,
+   "cues": [
+    {
+     "t": 75.112,
+     "d": 1.822,
+     "text": "S B I's involvement matters too."
+    },
+    {
+     "t": 77.084,
+     "d": 7.547,
+     "text": "J P Y S C was developed by Star-tale Group and S B I Group, and is issued by S B I Shinsei Trust Bank."
+    },
+    {
+     "t": 84.881,
+     "d": 7.09,
+     "text": "The stablecoin race is not just about technology. Trust, regulation, and real-world utility matter just as much."
+    }
+   ]
+  },
+  {
+   "id": "s8",
+   "start": 92.771,
+   "end": 113.173,
+   "cues": [
+    {
+     "t": 93.271,
+     "d": 1.398,
+     "text": "But, there are important risks."
+    },
+    {
+     "t": 94.869,
+     "d": 2.265,
+     "text": "A five percent yield does not mean risk-free."
+    },
+    {
+     "t": 97.284,
+     "d": 5.187,
+     "text": "The bonds rely on a parent-company guarantee, so the guarantor's financial strength matters."
+    },
+    {
+     "t": 102.621,
+     "d": 3.977,
+     "text": "Early redemption or transfer before maturity is generally not available."
+    },
+    {
+     "t": 106.748,
+     "d": 3.413,
+     "text": "The offering is limited to eligible investors in Japan."
+    },
+    {
+     "t": 110.311,
+     "d": 2.062,
+     "text": "And this is not a risk-free bank deposit."
+    }
+   ]
+  },
+  {
+   "id": "s9",
+   "start": 113.173,
+   "end": 128.435,
+   "cues": [
+    {
+     "t": 113.573,
+     "d": 0.877,
+     "text": "The bottom line."
+    },
+    {
+     "t": 114.6,
+     "d": 7.059,
+     "text": "The significance isn't simply the five percent yield. It's connecting traditional capital markets, with on-chain infrastructure."
+    },
+    {
+     "t": 121.858,
+     "d": 5.877,
+     "text": "If models like this gain traction, stablecoins could become a core part of capital market infrastructure."
+    }
+   ]
+  },
+  {
+   "id": "end",
+   "start": 128.435,
+   "end": 133.851,
+   "cues": [
+    {
+     "t": 128.736,
+     "d": 2.915,
+     "text": "Star-tale Bond. Powered by J P Y S C."
+    }
+   ]
+  }
+ ],
+ "voice": "af_heart",
+ "duration": 133.851
+}

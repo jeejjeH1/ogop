@@ -1,0 +1,200 @@
+[
+ {
+  "id": "s1",
+  "lead": 1.6,
+  "tail": 0.7,
+  "lines": [
+   [
+    "A major development, at the intersection of Trad-Fi and Dee-Fi.",
+    0.3
+   ]
+  ]
+ },
+ {
+  "id": "s2",
+  "lead": 0.5,
+  "tail": 0.6,
+  "lines": [
+   [
+    "Star-tale has introduced digital corporate bonds in Japan.",
+    0.25
+   ],
+   [
+    "Bonds that pay both interest and principal, using J P Y S C, a Japanese yen stablecoin.",
+    0.2
+   ]
+  ]
+ },
+ {
+  "id": "s3",
+  "lead": 0.4,
+  "tail": 0.7,
+  "lines": [
+   [
+    "But why does this matter, beyond another financial product?",
+    0.2
+   ]
+  ]
+ },
+ {
+  "id": "s4",
+  "lead": 0.4,
+  "tail": 0.6,
+  "lines": [
+   [
+    "First, the key numbers.",
+    0.2
+   ],
+   [
+    "A five percent annual yield, before tax.",
+    0.15
+   ],
+   [
+    "A one-year term.",
+    0.15
+   ],
+   [
+    "A minimum investment of one hundred thousand yen.",
+    0.15
+   ],
+   [
+    "Total issuance of ninety-nine point nine million yen.",
+    0.15
+   ],
+   [
+    "Maturing in December, twenty twenty-seven.",
+    0.3
+   ],
+   [
+    "And the bonds are guaranteed by the parent company, Star-tale Group.",
+    0.2
+   ]
+  ]
+ },
+ {
+  "id": "s5",
+  "lead": 0.4,
+  "tail": 0.6,
+  "lines": [
+   [
+    "So, where is the innovation?",
+    0.2
+   ],
+   [
+    "Traditional bonds rely on conventional banking rails, for interest and principal.",
+    0.15
+   ],
+   [
+    "Star-tale Bond pays them in J P Y S C, a yen stablecoin issued by S B I Shinsei Trust Bank.",
+    0.25
+   ],
+   [
+    "Moving blockchain beyond crypto trading, and into real-world corporate financing.",
+    0.2
+   ]
+  ]
+ },
+ {
+  "id": "s6",
+  "lead": 0.4,
+  "tail": 0.6,
+  "lines": [
+   [
+    "Why should we pay attention?",
+    0.15
+   ],
+   [
+    "For stablecoins to become financial infrastructure, fast payments alone are not enough.",
+    0.15
+   ],
+   [
+    "They need real applications. Bond markets. Interest payments. Tokenized asset settlement.",
+    0.2
+   ],
+   [
+    "Star-tale Bond is a practical example of this direction.",
+    0.2
+   ]
+  ]
+ },
+ {
+  "id": "s7",
+  "lead": 0.4,
+  "tail": 0.6,
+  "lines": [
+   [
+    "S B I's involvement matters too.",
+    0.15
+   ],
+   [
+    "J P Y S C was developed by Star-tale Group and S B I Group, and is issued by S B I Shinsei Trust Bank.",
+    0.25
+   ],
+   [
+    "The stablecoin race is not just about technology. Trust, regulation, and real-world utility matter just as much.",
+    0.2
+   ]
+  ]
+ },
+ {
+  "id": "s8",
+  "lead": 0.5,
+  "tail": 0.6,
+  "lines": [
+   [
+    "But, there are important risks.",
+    0.2
+   ],
+   [
+    "A five percent yield does not mean risk-free.",
+    0.15
+   ],
+   [
+    "The bonds rely on a parent-company guarantee, so the guarantor's financial strength matters.",
+    0.15
+   ],
+   [
+    "Early redemption or transfer before maturity is generally not available.",
+    0.15
+   ],
+   [
+    "The offering is limited to eligible investors in Japan.",
+    0.15
+   ],
+   [
+    "And this is not a risk-free bank deposit.",
+    0.2
+   ]
+  ]
+ },
+ {
+  "id": "s9",
+  "lead": 0.4,
+  "tail": 0.5,
+  "lines": [
+   [
+    "The bottom line.",
+    0.15
+   ],
+   [
+    "The significance isn't simply the five percent yield. It's connecting traditional capital markets, with on-chain infrastructure.",
+    0.2
+   ],
+   [
+    "If models like this gain traction, stablecoins could become a core part of capital market infrastructure.",
+    0.2
+   ]
+  ]
+ },
+ {
+  "id": "end",
+  "lead": 0.3,
+  "tail": 2.2,
+  "lines": [
+   [
+    "Star-tale Bond. Powered by J P Y S C.",
+    0.0
+   ]
+  ]
+ }
+]
