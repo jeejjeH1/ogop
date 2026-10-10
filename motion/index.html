@@ -6,13 +6,14 @@
 <title>Startale Bond × JPYSC</title>
 <style>
   :root{
-    --ink:#02040b; --white:#f3f7ff; --mute:rgba(220,232,255,.62);
-    --blue:#0b4ea2; --blue2:#2f7dff; --cyan:#7cc4ff; --amber:#ffb547; --red:#ff5a5a;
+    --bg:#f4f1fb; --white:#141838; --ink:#141838; --mute:rgba(20,24,56,.62);
+    --blue:#2f6fe0; --blue2:#6a5cff; --cyan:#6a5cff; --amber:#ff6f61; --red:#e8455a;
+    --holo:linear-gradient(100deg,#6a5cff 0%,#c04fd0 50%,#13a6c4 100%);
     --font:'Inter Display','Inter',system-ui,sans-serif;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html,body{background:#000;overflow:hidden;width:100%;height:100%}
-  #stage{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;background:var(--ink);transform-origin:0 0;font-family:var(--font);color:var(--white)}
+  html,body{background:#f4f1fb;overflow:hidden;width:100%;height:100%}
+  #stage{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;background:var(--bg);transform-origin:0 0;font-family:var(--font);color:var(--ink)}
   #gl{position:absolute;inset:0;width:1920px;height:1080px;display:block}
   .layer{position:absolute;inset:0;pointer-events:none}
   .scene{position:absolute;inset:0;display:none;will-change:opacity,filter,transform}
@@ -21,66 +22,67 @@
   .anchor > *{position:absolute;left:0;top:0;transform-origin:50% 50%}
   .ac{translate:-50% -50%}
 
-  .kicker{font:600 19px/1 var(--font);letter-spacing:.34em;text-transform:uppercase;color:var(--cyan);display:flex;align-items:center;gap:16px;white-space:nowrap}
-  .kicker::before{content:"";width:46px;height:2px;background:linear-gradient(90deg,transparent,var(--cyan));box-shadow:0 0 12px var(--cyan)}
+  .kicker{font:700 19px/1 var(--font);letter-spacing:.34em;text-transform:uppercase;color:var(--cyan);display:flex;align-items:center;gap:16px;white-space:nowrap}
+  .kicker::before{content:"";width:46px;height:3px;border-radius:3px;background:var(--holo)}
   .kicker.c{justify-content:center}
-  .kicker.c::after{content:"";width:46px;height:2px;background:linear-gradient(270deg,transparent,var(--cyan));box-shadow:0 0 12px var(--cyan)}
-  .h1{font:800 84px/1.02 var(--font);letter-spacing:-.038em;text-shadow:0 6px 40px rgba(0,10,40,.7)}
-  .h2{font:700 54px/1.08 var(--font);letter-spacing:-.03em;text-shadow:0 6px 30px rgba(0,10,40,.7)}
+  .kicker.c::after{content:"";width:46px;height:3px;border-radius:3px;background:var(--holo)}
+  .h1{font:800 84px/1.02 var(--font);letter-spacing:-.038em;text-shadow:0 2px 30px rgba(255,255,255,.75)}
+  .h2{font:700 54px/1.08 var(--font);letter-spacing:-.03em;text-shadow:0 2px 24px rgba(255,255,255,.75)}
   .p{font:500 30px/1.35 var(--font);letter-spacing:-.01em;color:var(--mute)}
-  .hl{color:#8fc9ff;text-shadow:0 0 34px rgba(47,125,255,.65),0 4px 30px rgba(0,10,40,.6)}
-  .hla{color:#ffb547;text-shadow:0 0 34px rgba(255,140,40,.55),0 4px 30px rgba(20,8,0,.6)}
-  .w{display:inline-block;overflow:hidden;vertical-align:top;padding:0 .02em .08em;margin-bottom:-.08em}
+  .hl{background:var(--holo);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;text-shadow:none}
+  .hla{background:linear-gradient(100deg,#ff6f61,#e8455a 55%,#c04fd0);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;text-shadow:none}
+  .w{display:inline-block;overflow:hidden;vertical-align:top;padding:0 .04em .1em;margin:0 -.02em -.1em}
   .wi{display:inline-block}
 
-  .glass{background:linear-gradient(160deg,rgba(70,130,255,.16),rgba(8,18,40,.55));border:1px solid rgba(124,196,255,.22);border-radius:22px;box-shadow:0 20px 60px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.12), 0 0 40px rgba(47,125,255,.08)}
+  .glass{background:linear-gradient(160deg,rgba(255,255,255,.88),rgba(255,255,255,.55));border:1.5px solid rgba(255,255,255,.95);border-radius:22px;box-shadow:0 24px 60px rgba(106,92,255,.16), 0 2px 6px rgba(106,92,255,.06), inset 0 1px 0 #fff}
   .chip{display:inline-flex;align-items:center;gap:12px;padding:14px 24px;border-radius:999px;font:600 24px/1 var(--font);letter-spacing:-.005em;white-space:nowrap}
-  .chip .dot{width:10px;height:10px;border-radius:50%;background:var(--cyan);box-shadow:0 0 14px var(--cyan)}
+  .chip .dot{width:10px;height:10px;border-radius:50%;background:var(--holo)}
 
   .stat{position:absolute;width:390px;height:200px;padding:30px 34px;overflow:hidden}
-  .stat .lbl{font:600 16px/1 var(--font);letter-spacing:.26em;text-transform:uppercase;color:var(--cyan)}
+  .stat .lbl{font:700 16px/1 var(--font);letter-spacing:.26em;text-transform:uppercase;color:var(--cyan)}
   .stat .val{font:800 72px/1 var(--font);letter-spacing:-.04em;margin-top:26px;white-space:nowrap}
   .stat .sub{font:500 20px/1 var(--font);color:var(--mute);margin-top:14px}
-  .stat::after{content:"";position:absolute;right:-60px;top:-60px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(47,125,255,.35),transparent 70%)}
-  .sheen{position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.18) 50%,transparent 65%);transform:translateX(-120%)}
+  .stat::after{content:"";position:absolute;right:-70px;top:-70px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(255,170,225,.55),rgba(150,235,215,.25) 45%,transparent 70%)}
+  .sheen{position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.9) 50%,transparent 65%);transform:translateX(-120%)}
 
-  .lbl3d{font:700 26px/1.1 var(--font);letter-spacing:-.01em;white-space:nowrap;text-align:center;text-shadow:0 2px 20px rgba(0,0,0,.9)}
-  .lbl3d small{display:block;font:600 14px/1 var(--font);letter-spacing:.28em;text-transform:uppercase;color:var(--cyan);margin-top:10px}
-  .tag{font:600 15px/1 var(--font);letter-spacing:.3em;text-transform:uppercase;color:var(--cyan);white-space:nowrap}
+  .lbl3d{font:700 26px/1.1 var(--font);letter-spacing:-.01em;white-space:nowrap;text-align:center;text-shadow:0 0 18px #fff,0 0 30px rgba(255,255,255,.9)}
+  .lbl3d small{display:block;font:700 14px/1 var(--font);letter-spacing:.28em;text-transform:uppercase;color:var(--cyan);margin-top:10px}
+  .tag{font:700 15px/1 var(--font);letter-spacing:.3em;text-transform:uppercase;color:var(--cyan);white-space:nowrap}
 
   .risk{position:absolute;left:930px;width:880px;height:118px;display:flex;align-items:center;gap:26px;padding:0 30px;border-radius:20px;
-        background:linear-gradient(100deg,rgba(255,170,60,.13),rgba(20,12,6,.55));border:1px solid rgba(255,181,71,.25);box-shadow:0 18px 50px rgba(0,0,0,.4)}
+        background:linear-gradient(100deg,rgba(255,255,255,.9),rgba(255,236,232,.6));border:1.5px solid rgba(255,255,255,.95);box-shadow:0 18px 50px rgba(232,69,90,.12)}
   .risk .n{font:800 22px/1 var(--font);color:var(--amber);letter-spacing:.06em;width:40px}
-  .risk .ic{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;background:rgba(255,181,71,.14);border:1px solid rgba(255,181,71,.35);flex:none}
+  .risk .ic{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;background:rgba(255,111,97,.12);border:1px solid rgba(255,111,97,.35);flex:none;color:var(--amber);font-weight:800;font-size:24px}
   .risk .t{font:700 29px/1.12 var(--font);letter-spacing:-.015em}
-  .risk .t span{display:block;font:500 20px/1.25 var(--font);color:rgba(255,236,210,.7);margin-top:6px;letter-spacing:0}
-  .stamp{font:900 64px/1 var(--font);letter-spacing:-.02em;color:var(--amber);border:6px solid var(--amber);border-radius:14px;padding:12px 26px;white-space:nowrap;
-         text-shadow:0 0 30px rgba(255,160,40,.6);box-shadow:0 0 40px rgba(255,160,40,.35), inset 0 0 30px rgba(255,160,40,.2)}
-  .strike{position:absolute;left:-2%;top:54%;height:9px;width:104%;background:linear-gradient(90deg,#ffb547,#ff5a5a);border-radius:9px;box-shadow:0 0 24px rgba(255,120,60,.8);transform-origin:0 50%}
+  .risk .t span{display:block;font:500 20px/1.25 var(--font);color:var(--mute);margin-top:6px;letter-spacing:0}
+  .stamp{font:900 64px/1 var(--font);letter-spacing:-.02em;color:var(--red);border:6px solid var(--red);border-radius:14px;padding:12px 26px;white-space:nowrap;background:rgba(255,255,255,.65);
+         box-shadow:0 14px 40px rgba(232,69,90,.25)}
+  .strike{position:absolute;left:-2%;top:54%;height:9px;width:104%;background:linear-gradient(90deg,#ff6f61,#e8455a);border-radius:9px;box-shadow:0 4px 18px rgba(232,69,90,.45);transform-origin:0 50%}
 
   /* HUD */
   #hud{position:absolute;inset:0;pointer-events:none}
-  .brk{position:absolute;width:38px;height:38px;border-color:rgba(160,205,255,.55);border-style:solid}
+  .brk{position:absolute;width:38px;height:38px;border-color:rgba(106,92,255,.5);border-style:solid}
   .brk.tl{left:36px;top:36px;border-width:2px 0 0 2px}.brk.tr{right:36px;top:36px;border-width:2px 2px 0 0}
   .brk.bl{left:36px;bottom:36px;border-width:0 0 2px 2px}.brk.br{right:36px;bottom:36px;border-width:0 2px 2px 0}
-  .hud-tl{position:absolute;left:66px;top:52px;display:flex;align-items:center;gap:14px;font:700 15px/1 var(--font);letter-spacing:.3em}
-  .hud-tl .sep{width:1px;height:18px;background:rgba(255,255,255,.3)}
-  .hud-tl .m{color:var(--cyan);font-weight:600}
-  .hud-tr{position:absolute;right:66px;top:52px;display:flex;align-items:center;gap:12px;font:600 15px/1 var(--font);letter-spacing:.3em;color:var(--mute)}
-  .hud-tr b{color:var(--white);font-weight:700}
-  .live{width:9px;height:9px;border-radius:50%;background:var(--cyan);box-shadow:0 0 12px var(--cyan)}
+  .hud-tl{position:absolute;left:66px;top:52px;display:flex;align-items:center;gap:14px;font:800 15px/1 var(--font);letter-spacing:.3em}
+  .hud-tl .sep{width:1px;height:18px;background:rgba(20,24,56,.25)}
+  .hud-tl .m{color:var(--cyan);font-weight:700}
+  .hud-tr{position:absolute;right:66px;top:52px;display:flex;align-items:center;gap:12px;font:700 15px/1 var(--font);letter-spacing:.3em;color:var(--mute)}
+  .hud-tr b{color:var(--ink);font-weight:800}
+  .live{width:9px;height:9px;border-radius:50%;background:var(--holo);box-shadow:0 0 10px rgba(192,79,208,.6)}
   .hud-bar{position:absolute;left:66px;right:66px;bottom:54px;height:3px;display:flex;gap:6px}
-  .hud-bar i{flex:1;background:rgba(255,255,255,.14);border-radius:3px;overflow:hidden;position:relative}
-  .hud-bar i b{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--blue2),var(--cyan));box-shadow:0 0 10px var(--cyan)}
-  .hud-bl{position:absolute;left:66px;bottom:72px;font:600 13px/1 var(--font);letter-spacing:.3em;color:rgba(220,232,255,.45)}
-  .hud-br{position:absolute;right:66px;bottom:72px;font:600 13px/1 var(--font);letter-spacing:.3em;color:rgba(220,232,255,.45)}
+  .hud-bar i{flex:1;background:rgba(20,24,56,.1);border-radius:3px;overflow:hidden;position:relative}
+  .hud-bar i b{position:absolute;left:0;top:0;bottom:0;background:var(--holo)}
+  .hud-bl{position:absolute;left:66px;bottom:72px;font:700 13px/1 var(--font);letter-spacing:.3em;color:rgba(20,24,56,.4)}
+  .hud-br{position:absolute;right:66px;bottom:72px;font:700 13px/1 var(--font);letter-spacing:.3em;color:rgba(20,24,56,.4)}
 
-  #flash{position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,#d8ecff,#3d8bff 60%,#0b2a6b);mix-blend-mode:screen;opacity:0}
-  #vignette{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,transparent 55%,rgba(0,0,0,.55) 100%)}
-  #grain{position:absolute;inset:-64px;opacity:.07;mix-blend-mode:overlay}
-  #scan{position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 1px,transparent 1px 3px);opacity:.5}
-  #black{position:absolute;inset:0;background:#000;opacity:0}
+  #flash{position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,#ffffff,#fbeaff 55%,#e3f7ff);opacity:0}
+  #vignette{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,transparent 58%,rgba(170,150,255,.22) 100%)}
+  #grain{position:absolute;inset:-64px;opacity:.05;mix-blend-mode:soft-light}
+  #scan{display:none}
+  #black{position:absolute;inset:0;background:#fbf8ff;opacity:0}
 </style>
+
 <script type="importmap">
 { "imports": {
   "three": "./node_modules/three/build/three.module.js",
@@ -96,7 +98,7 @@
 
     <!-- 1 · INTRO -->
     <section class="scene" data-scene="s1">
-      <div class="anchor" data-anchor="xmark"><div class="ac" data-in="s1+3.0" data-fx="pop" style="font:300 120px/1 var(--font);color:var(--cyan);text-shadow:0 0 40px #2f7dff">×</div></div>
+      <div class="anchor" data-anchor="xmark"><div class="ac" data-in="s1+3.0" data-fx="pop" style="font:300 120px/1 var(--font);color:var(--cyan);text-shadow:0 0 30px #fff">×</div></div>
       <div class="abs" style="left:0;right:0;top:690px;text-align:center">
         <div class="kicker c" data-in="s1+2.6" data-fx="up">Breaking · Japan · Onchain finance</div>
         <div class="h1 split" data-in="s1.0" data-stagger=".09" style="font-size:80px;margin-top:26px">A major development at the intersection<br>of <span class="hl">TradFi</span> and <span class="hl">DeFi</span>.</div>
@@ -113,9 +115,9 @@
           <div style="font:300 40px/1 var(--font);color:var(--cyan)" data-in="s2.1+1.1" data-fx="fade">+</div>
           <div class="chip glass" data-in="s2.1+1.3" data-fx="pop"><span class="dot"></span>Principal</div>
           <div style="font:300 40px/1 var(--font);color:var(--cyan)" data-in="s2.1+2.0" data-fx="left">→</div>
-          <div class="chip" data-in="s2.1+2.3" data-fx="pop" style="background:linear-gradient(120deg,#2f7dff,#0b4ea2);box-shadow:0 0 40px rgba(47,125,255,.6)">paid in JPYSC</div>
+          <div class="chip" data-in="s2.1+2.3" data-fx="pop" style="background:linear-gradient(120deg,#7b6cff,#c04fd0 60%,#2f9fe0);box-shadow:0 14px 40px rgba(106,92,255,.35);color:#fff">paid in JPYSC</div>
         </div>
-        <div class="p split" data-in="s2.1+3.4" data-stagger=".06" style="margin-top:30px">JPYSC — a <b style="color:#fff">Japanese yen stablecoin</b>.</div>
+        <div class="p split" data-in="s2.1+3.4" data-stagger=".06" style="margin-top:30px">JPYSC — a <b style="color:var(--ink)">Japanese yen stablecoin</b>.</div>
       </div>
     </section>
 
@@ -125,7 +127,7 @@
         <div class="h1 split" data-in="s3.0" data-stagger=".1" style="font-size:96px">But <span class="hl">why</span> does this matter</div>
       </div>
       <div class="abs" style="left:0;right:0;top:790px;text-align:center">
-        <div class="h2 split" data-in="s3.0+1.3" data-stagger=".09" style="font-size:66px;color:var(--mute)">beyond <span style="color:#fff">another financial product?</span></div>
+        <div class="h2 split" data-in="s3.0+1.3" data-stagger=".09" style="font-size:66px;color:var(--mute)">beyond <span style="color:var(--ink)">another financial product?</span></div>
       </div>
     </section>
 
@@ -169,11 +171,11 @@
       <div class="anchor" data-anchor="issuerLbl"><div class="ac lbl3d" data-in="s5.1-0.3" data-fx="up">Issuer<small>Startale</small></div></div>
       <div class="anchor" data-anchor="investorLbl"><div class="ac lbl3d" data-in="s5.1-0.1" data-fx="up">Bondholders<small>Interest + principal</small></div></div>
       <div class="anchor" data-anchor="bankLbl"><div class="ac" data-in="s5.1+0.6" data-fx="up">
-        <div class="chip" style="background:rgba(30,34,44,.85);border:1px solid rgba(255,255,255,.18);color:#c9d1de;font-size:22px">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#c9d1de" stroke-width="1.8"><path d="M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/></svg>
+        <div class="chip" style="background:rgba(255,255,255,.8);border:1.5px solid #fff;color:#5d6380;box-shadow:0 10px 30px rgba(20,24,56,.08);font-size:22px">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#5d6380" stroke-width="1.8"><path d="M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/></svg>
           Traditional bonds · conventional banking rails</div></div></div>
       <div class="anchor" data-anchor="chainLbl"><div class="ac" data-in="s5.2+0.8" data-fx="pop">
-        <div class="chip" style="background:linear-gradient(120deg,rgba(47,125,255,.9),rgba(11,78,162,.9));box-shadow:0 0 50px rgba(47,125,255,.6);font-size:23px">
+        <div class="chip" style="background:linear-gradient(120deg,#7b6cff,#c04fd0 60%,#2f9fe0);box-shadow:0 14px 40px rgba(106,92,255,.35);color:#fff;font-size:23px">
           <span class="dot" style="background:#fff"></span>Startale Bond · paid in JPYSC · issued by SBI Shinsei Trust Bank</div></div></div>
     </section>
 
@@ -182,9 +184,9 @@
       <div class="abs" style="left:120px;top:190px;width:900px">
         <div class="kicker" data-in="s6.0" data-fx="up">Why should we pay attention?</div>
         <div class="h1 split" data-in="s6.1" data-stagger=".09" style="margin-top:30px;font-size:80px">Fast payments alone are <span class="hl">not enough.</span></div>
-        <div class="p split" data-in="s6.2" data-stagger=".06" style="margin-top:34px;width:760px">To become financial infrastructure, stablecoins need <b style="color:#fff">real applications.</b></div>
+        <div class="p split" data-in="s6.2" data-stagger=".06" style="margin-top:34px;width:760px">To become financial infrastructure, stablecoins need <b style="color:var(--ink)">real applications.</b></div>
         <div class="glass" data-in="s6.3" data-fx="up" style="margin-top:48px;padding:26px 32px;display:flex;gap:20px;align-items:center;width:max-content">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#7cc4ff" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M7 12.5l3.2 3.2L17 9"/></svg>
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#6a5cff" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M7 12.5l3.2 3.2L17 9"/></svg>
           <div style="font:700 30px/1.1 var(--font)">Startale Bond <span style="color:var(--mute);font-weight:500">is a practical example</span></div>
         </div>
       </div>
@@ -201,15 +203,15 @@
         <div class="h1 split" data-in="s7.0+0.1" data-stagger=".1" style="margin-top:22px;font-size:68px"><span class="hl">SBI</span>'s involvement</div>
       </div>
       <div class="anchor" data-anchor="sbiNode"><div class="ac" data-in="s7.1+1.2" data-fx="pop" style="width:200px;height:200px;border-radius:50%;display:grid;place-items:center;
-           background:radial-gradient(circle at 35% 30%,rgba(124,196,255,.35),rgba(8,20,48,.9) 70%);border:1px solid rgba(124,196,255,.4);box-shadow:0 0 60px rgba(47,125,255,.35), inset 0 0 40px rgba(47,125,255,.25)">
+           background:radial-gradient(circle at 35% 30%,#ffffff,#f1ebff 50%,#d8f4ff);border:2px solid #fff;box-shadow:0 24px 60px rgba(106,92,255,.25), inset 0 -10px 30px rgba(192,79,208,.15)">
            <div style="font:900 64px/1 var(--font);letter-spacing:-.02em">SBI</div></div></div>
       <div class="anchor" data-anchor="stLbl7"><div class="ac lbl3d" data-in="s7.1+0.5" data-fx="up">Startale Group<small>co-developer</small></div></div>
       <div class="anchor" data-anchor="sbiLbl7"><div class="ac lbl3d" data-in="s7.1+1.6" data-fx="up">SBI Group<small>co-developer</small></div></div>
       <div class="anchor" data-anchor="jpLbl7"><div class="ac" data-in="s7.1+3.6" data-fx="pop" style="text-align:center">
-        <div class="chip" style="background:linear-gradient(120deg,#2f7dff,#0b4ea2);box-shadow:0 0 50px rgba(47,125,255,.6)">Issued by SBI Shinsei Trust Bank</div>
+        <div class="chip" style="background:linear-gradient(120deg,#7b6cff,#c04fd0 60%,#2f9fe0);box-shadow:0 14px 40px rgba(106,92,255,.35);color:#fff">Issued by SBI Shinsei Trust Bank</div>
         <div style="font:500 22px/1 var(--font);color:var(--mute);margin-top:16px;white-space:nowrap">→ connected to Japan's financial infrastructure</div></div></div>
       <div class="abs" style="left:0;right:0;top:850px;text-align:center">
-        <div class="p split" data-in="s7.2" data-stagger=".05" style="color:#fff;font-weight:600">The stablecoin race isn't just about technology.</div>
+        <div class="p split" data-in="s7.2" data-stagger=".05" style="color:var(--ink);font-weight:600">The stablecoin race isn't just about technology.</div>
         <div style="display:flex;gap:18px;justify-content:center;margin-top:24px">
           <div class="chip glass" data-in="s7.2+3.1" data-fx="pop"><span class="dot"></span>Trust</div>
           <div class="chip glass" data-in="s7.2+3.7" data-fx="pop"><span class="dot"></span>Regulatory frameworks</div>
@@ -227,13 +229,13 @@
       <div class="anchor" data-anchor="stampA"><div class="ac" data-in="s8.1+0.5" data-fx="stamp" style="rotate:-8deg"><div class="stamp">≠ RISK-FREE</div></div></div>
       <div class="risk" style="top:300px" data-in="s8.1" data-fx="right"><div class="n">01</div><div class="ic">%</div>
         <div class="t">A 5% yield is not risk-free<span>Higher yield, real risk</span></div></div>
-      <div class="risk" style="top:432px" data-in="s8.2" data-fx="right"><div class="n">02</div><div class="ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ffb547" stroke-width="2"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg></div>
+      <div class="risk" style="top:432px" data-in="s8.2" data-fx="right"><div class="n">02</div><div class="ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ff6f61" stroke-width="2"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg></div>
         <div class="t">Parent-company guarantee<span>The guarantor's financial strength matters</span></div></div>
-      <div class="risk" style="top:564px" data-in="s8.3" data-fx="right"><div class="n">03</div><div class="ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ffb547" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg></div>
+      <div class="risk" style="top:564px" data-in="s8.3" data-fx="right"><div class="n">03</div><div class="ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ff6f61" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg></div>
         <div class="t">Locked until maturity<span>Early redemption or transfer generally not available</span></div></div>
-      <div class="risk" style="top:696px" data-in="s8.4" data-fx="right"><div class="n">04</div><div class="ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ffb547" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.2" fill="#ffb547" stroke="none"/></svg></div>
+      <div class="risk" style="top:696px" data-in="s8.4" data-fx="right"><div class="n">04</div><div class="ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ff6f61" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.2" fill="#ff6f61" stroke="none"/></svg></div>
         <div class="t">Eligible investors in Japan only<span>Current offering is restricted</span></div></div>
-      <div class="risk" style="top:828px;border-color:rgba(255,90,90,.45);background:linear-gradient(100deg,rgba(255,90,90,.18),rgba(20,8,6,.6))" data-in="s8.5" data-fx="right"><div class="n" style="color:var(--red)">05</div><div class="ic" style="border-color:rgba(255,90,90,.5);background:rgba(255,90,90,.15)"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ff5a5a" stroke-width="2.2"><path d="M12 3L2 20h20zM12 10v5M12 17.5v.5"/></svg></div>
+      <div class="risk" style="top:828px;border-color:rgba(255,90,90,.45);background:linear-gradient(100deg,rgba(255,215,215,.95),rgba(255,255,255,.7))" data-in="s8.5" data-fx="right"><div class="n" style="color:var(--red)">05</div><div class="ic" style="border-color:rgba(255,90,90,.5);background:rgba(255,90,90,.15)"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#e8455a" stroke-width="2.2"><path d="M12 3L2 20h20zM12 10v5M12 17.5v.5"/></svg></div>
         <div class="t">Not a risk-free bank deposit<span>Don't confuse the two</span></div></div>
     </section>
 
@@ -247,17 +249,17 @@
       <div class="anchor" data-anchor="tradLbl"><div class="ac lbl3d" data-in="s9.1+3.4" data-fx="up">Traditional<br>capital markets</div></div>
       <div class="anchor" data-anchor="chainLbl9"><div class="ac lbl3d" data-in="s9.1+4.4" data-fx="up">Onchain<br>infrastructure</div></div>
       <div class="abs" style="left:0;right:0;top:930px;text-align:center">
-        <div class="p split" data-in="s9.2" data-stagger=".05" style="color:#fff;font-weight:600;font-size:32px">Stablecoins: from trading instruments → <span class="hl">capital-market infrastructure.</span></div>
+        <div class="p split" data-in="s9.2" data-stagger=".05" style="color:var(--ink);font-weight:600;font-size:32px">Stablecoins: from trading instruments → <span class="hl">capital-market infrastructure.</span></div>
       </div>
     </section>
 
     <!-- END CARD -->
     <section class="scene" data-scene="end">
-      <div class="anchor" data-anchor="xmarkEnd"><div class="ac" data-in="end+0.7" data-fx="pop" style="font:300 110px/1 var(--font);color:var(--cyan);text-shadow:0 0 40px #2f7dff">×</div></div>
+      <div class="anchor" data-anchor="xmarkEnd"><div class="ac" data-in="end+0.7" data-fx="pop" style="font:300 110px/1 var(--font);color:var(--cyan);text-shadow:0 0 30px #fff">×</div></div>
       <div class="abs" style="left:0;right:0;top:690px;text-align:center">
         <div class="h1 split" data-in="end.0" data-stagger=".12" style="font-size:96px;letter-spacing:-.045em">STARTALE <span class="hl">BOND</span></div>
-        <div class="p" data-in="end.0+1.0" data-fx="up" style="margin-top:18px">Digital corporate bonds · interest &amp; principal paid in <b style="color:#fff">JPYSC</b></div>
-        <div data-in="end.0+1.8" data-fx="fade" style="font:500 16px/1 var(--font);letter-spacing:.12em;color:rgba(220,232,255,.42);margin-top:60px">FOR INFORMATION ONLY · NOT FINANCIAL ADVICE · OFFERING LIMITED TO ELIGIBLE INVESTORS IN JAPAN</div>
+        <div class="p" data-in="end.0+1.0" data-fx="up" style="margin-top:18px">Digital corporate bonds · interest &amp; principal paid in <b style="color:var(--ink)">JPYSC</b></div>
+        <div data-in="end.0+1.8" data-fx="fade" style="font:500 16px/1 var(--font);letter-spacing:.12em;color:rgba(20,24,56,.45);margin-top:60px">FOR INFORMATION ONLY · NOT FINANCIAL ADVICE · OFFERING LIMITED TO ELIGIBLE INVESTORS IN JAPAN</div>
       </div>
     </section>
   </div>

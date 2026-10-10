@@ -58,14 +58,14 @@ const canvas = document.getElementById('gl');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance', preserveDrawingBuffer: true });
 renderer.setPixelRatio(1);
 renderer.setSize(W, H, false);
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = .95;
+renderer.toneMapping = THREE.NeutralToneMapping;
+renderer.toneMappingExposure = 1.0;
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color('#010309');
+scene.background = new THREE.Color('#f4f1fb');
 const pmrem = new THREE.PMREMGenerator(renderer);
 scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-scene.environmentIntensity = .55;
+scene.environmentIntensity = 1.0;
 
 const camera = new THREE.PerspectiveCamera(35, W / H, 0.1, 200);
 camera.position.set(0, 0, 10);
@@ -76,7 +76,7 @@ const composer = new EffectComposer(renderer, rt);
 composer.setPixelRatio(1);
 composer.setSize(W, H);
 composer.addPass(new RenderPass(scene, camera));
-const bloom = new UnrealBloomPass(new THREE.Vector2(W, H), 0.4, 0.5, 0.92);
+const bloom = new UnrealBloomPass(new THREE.Vector2(W, H), 0.25, 0.5, 0.985);
 composer.addPass(bloom);
 composer.addPass(new OutputPass());
 const rgbShift = new ShaderPass(RGBShiftShader);
@@ -84,9 +84,9 @@ composer.addPass(rgbShift);
 
 // lights
 const key = new THREE.DirectionalLight('#ffffff', 2.2); key.position.set(4, 6, 8); scene.add(key);
-const rimBlue = new THREE.PointLight('#2f7dff', 90, 0, 2); rimBlue.position.set(-6, 3, -3); scene.add(rimBlue);
-const rimCyan = new THREE.PointLight('#7cc4ff', 50, 0, 2); rimCyan.position.set(6, -2, -2); scene.add(rimCyan);
-const amberL = new THREE.PointLight('#ff9a2e', 0, 0, 2); amberL.position.set(-2, 2, 5); scene.add(amberL);
+const rimBlue = new THREE.PointLight('#ff9ad5', 60, 0, 2); rimBlue.position.set(-6, 3, -3); scene.add(rimBlue);
+const rimCyan = new THREE.PointLight('#6fe8cf', 50, 0, 2); rimCyan.position.set(6, -2, -2); scene.add(rimCyan);
+const amberL = new THREE.PointLight('#ff7a6b', 0, 0, 2); amberL.position.set(-2, 2, 5); scene.add(amberL);
 
 // ───────────────────────── 2D drawing of the logos (canvas + svg)
 const LOGO = {
@@ -147,7 +147,7 @@ function symbolMeshes(shapes, mat) {
   return grp;
 }
 function edgeRing(color, r = 1.004) {
-  const m = new THREE.Mesh(new THREE.TorusGeometry(r, .012, 12, 160), new THREE.MeshBasicMaterial({ color, transparent: true, opacity: .9, blending: THREE.AdditiveBlending, depthWrite: false }));
+  const m = new THREE.Mesh(new THREE.TorusGeometry(r, .012, 12, 160), new THREE.MeshBasicMaterial({ color, transparent: true, opacity: .95, depthWrite: false }));
   return m;
 }
 function radialTex(stops) {
@@ -155,37 +155,37 @@ function radialTex(stops) {
   const gr = g.createRadialGradient(128, 128, 0, 128, 128, 128); stops.forEach(([o, col]) => gr.addColorStop(o, col));
   g.fillStyle = gr; g.fillRect(0, 0, 256, 256); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
 }
-const haloTex = radialTex([[0, 'rgba(90,160,255,.9)'], [.25, 'rgba(47,125,255,.35)'], [.6, 'rgba(20,60,160,.08)'], [1, 'rgba(0,0,0,0)']]);
+const haloTex = radialTex([[0, 'rgba(255,255,255,1)'], [.28, 'rgba(255,214,240,.7)'], [.5, 'rgba(196,236,255,.35)'], [.72, 'rgba(214,200,255,.12)'], [1, 'rgba(255,255,255,0)']]);
 function halo(scale, opacity, color = '#ffffff') {
-  const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: haloTex, color, transparent: true, opacity, blending: THREE.AdditiveBlending, depthWrite: false }));
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: haloTex, color, transparent: true, opacity, depthWrite: false }));
   s.scale.setScalar(scale); s.renderOrder = -1; return s;
 }
 
 // JPYSC coin
 const jp = new THREE.Group();
 {
-  const blueMat = new THREE.MeshPhysicalMaterial({ color: '#0b4ea2', metalness: .35, roughness: .3, clearcoat: .8, clearcoatRoughness: .1, envMapIntensity: .8 });
-  const whiteMat = new THREE.MeshPhysicalMaterial({ color: '#ffffff', metalness: .1, roughness: .22, clearcoat: 1, emissive: '#ffffff', emissiveIntensity: .16, envMapIntensity: .8 });
+  const blueMat = new THREE.MeshPhysicalMaterial({ color: '#0b4ea2', metalness: .3, roughness: .28, clearcoat: 1, clearcoatRoughness: .08, envMapIntensity: .9, iridescence: .55, iridescenceIOR: 1.5, iridescenceThicknessRange: [200, 700] });
+  const whiteMat = new THREE.MeshPhysicalMaterial({ color: '#ffffff', metalness: .1, roughness: .22, clearcoat: 1, emissive: '#ffffff', emissiveIntensity: .06, envMapIntensity: .8 });
   jp.add(new THREE.Mesh(discGeo(), blueMat));
   const shapes = [polyShape(LOGO.yen)];
   for (let k = 0; k < 4; k++) shapes.push(ringArc(LOGO.ringIn * S, LOGO.ringOut * S, k * Math.PI / 2 + LOGO.gap, (k + 1) * Math.PI / 2 - LOGO.gap));
   jp.add(symbolMeshes(shapes, whiteMat));
-  const er = edgeRing('#7cc4ff'); jp.add(er);
-  jp.userData.halo = halo(4.2, .3, '#3d7dff'); jp.add(jp.userData.halo);
+  const er = edgeRing('#ffffff'); jp.add(er);
+  jp.userData.halo = halo(4.4, .6, '#ffffff'); jp.add(jp.userData.halo);
   scene.add(jp);
 }
 // Startale logo
 const st = new THREE.Group();
 {
   const blackMat = new THREE.MeshPhysicalMaterial({ color: '#020203', metalness: .5, roughness: .22, clearcoat: .7, clearcoatRoughness: .12, envMapIntensity: .45 });
-  const whiteMat = new THREE.MeshPhysicalMaterial({ color: '#ffffff', metalness: .05, roughness: .2, clearcoat: 1, emissive: '#ffffff', emissiveIntensity: .22 });
+  const whiteMat = new THREE.MeshPhysicalMaterial({ color: '#ffffff', metalness: .05, roughness: .2, clearcoat: 1, emissive: '#ffffff', emissiveIntensity: .08 });
   st.add(new THREE.Mesh(discGeo(), blackMat));
   const shapes = [];
   LOGO.squares.forEach(([x, y]) => { const h = LOGO.sq / 2; shapes.push(polyShape([[x - h, y - h], [x + h, y - h], [x + h, y + h], [x - h, y + h]])); });
   LOGO.diamonds.forEach(([x, y]) => { const d = LOGO.dia; shapes.push(polyShape([[x, y - d], [x + d, y], [x, y + d], [x - d, y]])); });
   st.add(symbolMeshes(shapes, whiteMat));
-  st.add(edgeRing('#cfe3ff'));
-  st.userData.halo = halo(4.2, .22, '#6f9fff'); st.add(st.userData.halo);
+  st.add(edgeRing('#ffffff'));
+  st.userData.halo = halo(4.4, .5, '#ffffff'); st.add(st.userData.halo);
   scene.add(st);
 }
 
@@ -195,85 +195,78 @@ const CW = 3.4, CH = 2.1;
 async function buildCard() {
   const c = document.createElement('canvas'); c.width = 2048; c.height = Math.round(2048 * CH / CW); const g = c.getContext('2d');
   const w = c.width, h = c.height;
-  const rr = (x, y, ww, hh, r) => { g.beginPath(); g.roundRect(x, y, ww, hh, r); };
-  rr(0, 0, w, h, 52); g.save(); g.clip();
-  let gr = g.createLinearGradient(0, 0, w, h); gr.addColorStop(0, '#11367a'); gr.addColorStop(.5, '#081a42'); gr.addColorStop(1, '#030a1a');
+  g.beginPath(); g.roundRect(0, 0, w, h, 52); g.save(); g.clip();
+  let gr = g.createLinearGradient(0, 0, w, h); gr.addColorStop(0, '#ffffff'); gr.addColorStop(.5, '#f4efff'); gr.addColorStop(1, '#e4f6ff');
   g.fillStyle = gr; g.fillRect(0, 0, w, h);
-  // guilloche
+  for (const [x, y, r, col] of [[1700, 200, 700, 'rgba(255,170,225,.45)'], [300, 1100, 800, 'rgba(150,235,215,.45)'], [1100, 650, 600, 'rgba(190,175,255,.35)']]) {
+    const rg = g.createRadialGradient(x, y, 0, x, y, r); rg.addColorStop(0, col); rg.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = rg; g.fillRect(0, 0, w, h);
+  }
   g.lineWidth = 2;
   for (let k = 0; k < 46; k++) {
-    g.strokeStyle = `rgba(124,196,255,${.05 + .05 * Math.sin(k * .4) ** 2})`; g.beginPath();
+    g.strokeStyle = `rgba(106,92,255,${.05 + .06 * Math.sin(k * .4) ** 2})`; g.beginPath();
     for (let x = 0; x <= w; x += 8) { const y = 600 + Math.sin(x * .0042 + k * .21) * (180 + k * 3) * Math.cos(x * .0011 + k * .05); x ? g.lineTo(x, y) : g.moveTo(x, y); }
     g.stroke();
   }
-  // rosette
   g.save(); g.translate(1640, 420);
-  for (let k = 0; k < 60; k++) { g.rotate(Math.PI / 60); g.strokeStyle = 'rgba(124,196,255,.07)'; g.beginPath(); g.ellipse(0, 0, 330, 120, 0, 0, Math.PI * 2); g.stroke(); }
+  for (let k = 0; k < 60; k++) { g.rotate(Math.PI / 60); g.strokeStyle = 'rgba(192,79,208,.08)'; g.beginPath(); g.ellipse(0, 0, 330, 120, 0, 0, Math.PI * 2); g.stroke(); }
   g.restore();
-  // header
+  const holo = (x0, x1) => { const q = g.createLinearGradient(x0, 0, x1, 0); q.addColorStop(0, '#6a5cff'); q.addColorStop(.5, '#c04fd0'); q.addColorStop(1, '#13a6c4'); return q; };
   drawStartale(g, 160, 150, 120);
-  g.fillStyle = '#fff'; g.font = '700 38px "Inter Display"'; g.letterSpacing = '8px'; g.fillText('STARTALE GROUP', 250, 164);
-  g.textAlign = 'right'; g.fillStyle = '#7cc4ff'; g.font = '600 30px "Inter Display"'; g.letterSpacing = '10px'; g.fillText('DIGITAL CORPORATE BOND', w - 100, 162);
+  g.fillStyle = '#141838'; g.font = '800 38px "Inter Display"'; g.letterSpacing = '8px'; g.fillText('STARTALE GROUP', 250, 164);
+  g.textAlign = 'right'; g.fillStyle = '#6a5cff'; g.font = '700 30px "Inter Display"'; g.letterSpacing = '10px'; g.fillText('DIGITAL CORPORATE BOND', w - 100, 162);
   g.textAlign = 'left'; g.letterSpacing = '-4px';
-  g.fillStyle = '#fff'; g.font = '800 150px "Inter Display"'; g.fillText('STARTALE BOND', 100, 470);
-  g.letterSpacing = '0px'; g.fillStyle = 'rgba(220,232,255,.7)'; g.font = '500 40px "Inter Display"'; g.fillText('Japan  ·  Guaranteed by Startale Group (parent)', 106, 548);
-  // yield
+  g.fillStyle = '#141838'; g.font = '800 150px "Inter Display"'; g.fillText('STARTALE BOND', 100, 470);
+  g.letterSpacing = '0px'; g.fillStyle = 'rgba(20,24,56,.62)'; g.font = '500 40px "Inter Display"'; g.fillText('Japan  ·  Guaranteed by Startale Group (parent)', 106, 548);
   g.textAlign = 'right'; g.letterSpacing = '-6px';
-  gr = g.createLinearGradient(1400, 380, 1950, 600); gr.addColorStop(0, '#d6ecff'); gr.addColorStop(1, '#4b98ff');
-  g.fillStyle = gr; g.font = '800 120px "Inter Display"'; g.fillText('5.00%', w - 100, 360);
-  g.letterSpacing = '6px'; g.fillStyle = '#7cc4ff'; g.font = '600 26px "Inter Display"'; g.fillText('ANNUAL · PRE-TAX', w - 100, 250);
-  // divider
+  g.fillStyle = holo(1450, 1950); g.font = '800 120px "Inter Display"'; g.fillText('5.00%', w - 100, 360);
+  g.letterSpacing = '6px'; g.fillStyle = '#6a5cff'; g.font = '700 26px "Inter Display"'; g.fillText('ANNUAL · PRE-TAX', w - 100, 250);
   g.textAlign = 'left';
-  gr = g.createLinearGradient(100, 0, w - 100, 0); gr.addColorStop(0, 'rgba(124,196,255,.8)'); gr.addColorStop(1, 'rgba(124,196,255,0)');
-  g.fillStyle = gr; g.fillRect(100, 640, w - 200, 3);
-  const cols = [['TERM', '1 YEAR'], ['MINIMUM', '¥100,000'], ['ISSUANCE', '¥99.9M'], ['MATURITY', 'DEC 2027']];
-  cols.forEach(([l, v], i) => {
+  g.fillStyle = holo(100, w - 100); g.fillRect(100, 640, w - 200, 4);
+  [['TERM', '1 YEAR'], ['MINIMUM', '¥100,000'], ['ISSUANCE', '¥99.9M'], ['MATURITY', 'DEC 2027']].forEach(([l, v], i) => {
     const x = 100 + i * 470;
-    g.letterSpacing = '6px'; g.fillStyle = '#7cc4ff'; g.font = '600 26px "Inter Display"'; g.fillText(l, x, 730);
-    g.letterSpacing = '-2px'; g.fillStyle = '#fff'; g.font = '700 66px "Inter Display"'; g.fillText(v, x, 812);
+    g.letterSpacing = '6px'; g.fillStyle = '#6a5cff'; g.font = '700 26px "Inter Display"'; g.fillText(l, x, 730);
+    g.letterSpacing = '-2px'; g.fillStyle = '#141838'; g.font = '800 66px "Inter Display"'; g.fillText(v, x, 812);
   });
-  // holographic band
   gr = g.createLinearGradient(0, 0, w, 0);
-  ['#1d5fd6', '#57b4ff', '#9ad7ff', '#2f7dff', '#0b4ea2', '#5aa8ff'].forEach((col, i, a) => gr.addColorStop(i / (a.length - 1), col));
-  g.fillStyle = gr; g.globalAlpha = .9; g.fillRect(0, 930, w, h - 930); g.globalAlpha = 1;
-  g.fillStyle = 'rgba(2,8,24,.55)'; g.fillRect(0, 930, w, h - 930);
+  ['#cbbcff', '#ffc2e6', '#bff3e3', '#bfe6ff', '#d9c8ff'].forEach((col, i, a) => gr.addColorStop(i / (a.length - 1), col));
+  g.fillStyle = gr; g.fillRect(0, 930, w, h - 930);
   drawJPYSC(g, 175, 1076, 150);
-  g.letterSpacing = '4px'; g.fillStyle = '#fff'; g.font = '700 46px "Inter Display"'; g.fillText('INTEREST & PRINCIPAL PAID IN JPYSC', 280, 1068);
-  g.letterSpacing = '6px'; g.fillStyle = 'rgba(220,240,255,.75)'; g.font = '500 26px "Inter Display"'; g.fillText('YEN STABLECOIN  ·  ISSUED BY SBI SHINSEI TRUST BANK', 282, 1118);
+  g.letterSpacing = '4px'; g.fillStyle = '#141838'; g.font = '800 46px "Inter Display"'; g.fillText('INTEREST & PRINCIPAL PAID IN JPYSC', 280, 1068);
+  g.letterSpacing = '6px'; g.fillStyle = 'rgba(20,24,56,.65)'; g.font = '600 26px "Inter Display"'; g.fillText('YEN STABLECOIN  ·  ISSUED BY SBI SHINSEI TRUST BANK', 282, 1118);
   g.restore();
   const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8;
 
-  const body = new THREE.Mesh(new RoundedBoxGeometry(CW, CH, .06, 4, .08), new THREE.MeshPhysicalMaterial({ color: '#0a1f4a', metalness: .8, roughness: .25, clearcoat: 1, envMapIntensity: 1.3 }));
+  const body = new THREE.Mesh(new RoundedBoxGeometry(CW, CH, .06, 4, .08), new THREE.MeshPhysicalMaterial({ color: '#f6f3ff', metalness: .2, roughness: .2, clearcoat: 1, iridescence: 1, iridescenceIOR: 1.6, iridescenceThicknessRange: [200, 800] }));
   card.add(body);
-  const faceMat = new THREE.MeshPhysicalMaterial({ map: tex, emissiveMap: tex, emissive: '#ffffff', emissiveIntensity: .38, transparent: true, metalness: .2, roughness: .3, clearcoat: 1, clearcoatRoughness: .05 });
+  const faceMat = new THREE.MeshBasicMaterial({ map: tex, transparent: true });
   const face = new THREE.Mesh(new THREE.PlaneGeometry(CW - .02, CH - .02), faceMat); face.position.z = .032; card.add(face);
-  const back = face.clone(); back.material = new THREE.MeshPhysicalMaterial({ color: '#0b2a63', metalness: .6, roughness: .3, clearcoat: 1 }); back.rotation.y = Math.PI; back.position.z = -.032; card.add(back);
-  const edge = new THREE.LineSegments(new THREE.EdgesGeometry(new RoundedBoxGeometry(CW + .01, CH + .01, .065, 4, .08), 30), new THREE.LineBasicMaterial({ color: '#7cc4ff', transparent: true, opacity: .5 }));
+  const back = face.clone(); back.material = new THREE.MeshPhysicalMaterial({ color: '#efe9ff', metalness: .3, roughness: .2, clearcoat: 1, iridescence: 1 }); back.rotation.y = Math.PI; back.position.z = -.032; card.add(back);
+  const edge = new THREE.LineSegments(new THREE.EdgesGeometry(new RoundedBoxGeometry(CW + .01, CH + .01, .065, 4, .08), 30), new THREE.LineBasicMaterial({ color: '#ffffff', transparent: true, opacity: .85 }));
   card.add(edge);
-  card.userData.halo = halo(6, .2, '#3d7dff'); card.add(card.userData.halo);
+  card.userData.halo = halo(6, .3, '#ffffff'); card.add(card.userData.halo);
   scene.add(card);
 }
 
 // "5%" 3D text
 const five = new THREE.Group();
-const fiveMat = new THREE.MeshPhysicalMaterial({ color: '#9cc3ff', metalness: 1, roughness: .16, clearcoat: 1, clearcoatRoughness: .05, emissive: '#1d5cff', emissiveIntensity: .1, envMapIntensity: 2.2 });
+const fiveMat = new THREE.MeshPhysicalMaterial({ color: '#e9e4ff', metalness: 1, roughness: .12, clearcoat: 1, clearcoatRoughness: .04, iridescence: 1, iridescenceIOR: 1.8, iridescenceThicknessRange: [250, 950], envMapIntensity: 1.5 });
 async function buildFive() {
   const font = await new FontLoader().loadAsync('node_modules/three/examples/fonts/helvetiker_bold.typeface.json');
   const geo = new TextGeometry('5%', { font, size: 1.45, depth: .38, height: .38, curveSegments: 16, bevelEnabled: true, bevelThickness: .05, bevelSize: .035, bevelSegments: 5 });
   geo.computeBoundingBox(); const b = geo.boundingBox; geo.translate(-(b.max.x + b.min.x) / 2, -(b.max.y + b.min.y) / 2, -(b.max.z + b.min.z) / 2);
   five.add(new THREE.Mesh(geo, fiveMat));
-  five.userData.halo = halo(5, .25, '#3d7dff'); five.add(five.userData.halo);
+  five.userData.halo = halo(5, .5, '#ffffff'); five.add(five.userData.halo);
   scene.add(five);
 }
 
 // small instanced coins (face texture drawn from the logo)
-const coinFaceTex = (() => { const c = document.createElement('canvas'); c.width = c.height = 512; const g = c.getContext('2d'); drawJPYSC(g, 256, 256, 512); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t; })();
+const coinFaceTex = (() => { const c = document.createElement('canvas'); c.width = c.height = 512; const g = c.getContext('2d'); drawJPYSC(g, 256, 256, 512); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; t.center.set(.5, .5); t.rotation = Math.PI / 2; return t; })();
 const COINS = 48;
 const coinGeo = new THREE.CylinderGeometry(.2, .2, .035, 48); coinGeo.rotateX(Math.PI / 2);
 const coinMats = [
-  new THREE.MeshPhysicalMaterial({ color: '#2a6fd0', metalness: .8, roughness: .25, emissive: '#2f7dff', emissiveIntensity: .25 }),
-  new THREE.MeshPhysicalMaterial({ map: coinFaceTex, emissiveMap: coinFaceTex, emissive: '#ffffff', emissiveIntensity: .5, metalness: .3, roughness: .3, clearcoat: 1 }),
-  new THREE.MeshPhysicalMaterial({ map: coinFaceTex, emissiveMap: coinFaceTex, emissive: '#ffffff', emissiveIntensity: .5, metalness: .3, roughness: .3, clearcoat: 1 }),
+  new THREE.MeshPhysicalMaterial({ color: '#2a6fd0', metalness: .6, roughness: .25, iridescence: .6 }),
+  new THREE.MeshPhysicalMaterial({ map: coinFaceTex, emissiveMap: coinFaceTex, emissive: '#ffffff', emissiveIntensity: .15, metalness: .2, roughness: .3, clearcoat: 1 }),
+  new THREE.MeshPhysicalMaterial({ map: coinFaceTex, emissiveMap: coinFaceTex, emissive: '#ffffff', emissiveIntensity: .15, metalness: .2, roughness: .3, clearcoat: 1 }),
 ];
 const coins = new THREE.InstancedMesh(coinGeo, coinMats, COINS); coins.frustumCulled = false; scene.add(coins);
 
@@ -284,25 +277,25 @@ const dotVS = `
 const dotFS = `
   uniform vec3 uColor; uniform float uOpacity; varying float vA;
   void main(){ vec2 c = gl_PointCoord-.5; float d = length(c); float a = smoothstep(.5,.0,d); a = a*a*1.4 + smoothstep(.12,.0,d);
-    gl_FragColor = vec4(uColor*a, 1.)*uOpacity*vA; }`;
+    gl_FragColor = vec4(mix(vec3(1.),uColor,smoothstep(.0,.3,d)), clamp(a,0.,1.)*uOpacity*vA); }`;
 
 class Flow {
   constructor(pts, { color = '#2f7dff', radius = .02, dots = 10, dotSize = 26, glow = 4 } = {}) {
     this.curve = new THREE.CatmullRomCurve3(pts.map(p => new THREE.Vector3(...p)), false, 'centripetal');
     this.seg = 240; this.rad = 10;
     const mk = (r, op) => new THREE.Mesh(new THREE.TubeGeometry(this.curve, this.seg, r, this.rad, false),
-      new THREE.MeshBasicMaterial({ color, transparent: true, opacity: op, blending: THREE.AdditiveBlending, depthWrite: false }));
-    this.core = mk(radius, 1); this.glow = mk(radius * glow, .18);
+      new THREE.MeshBasicMaterial({ color, transparent: true, opacity: op, depthWrite: false }));
+    this.core = mk(radius, 1); this.glow = mk(radius * glow, .22);
     this.n = dots;
     const geo = new THREE.BufferGeometry();
     geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(dots * 3), 3));
     geo.setAttribute('aSize', new THREE.BufferAttribute(new Float32Array(dots).fill(dotSize / 110), 1));
     geo.setAttribute('aAlpha', new THREE.BufferAttribute(new Float32Array(dots).fill(1), 1));
-    this.dots = new THREE.Points(geo, new THREE.ShaderMaterial({ vertexShader: dotVS, fragmentShader: dotFS, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+    this.dots = new THREE.Points(geo, new THREE.ShaderMaterial({ vertexShader: dotVS, fragmentShader: dotFS, transparent: true, depthWrite: false,
       uniforms: { uPix: { value: H / 2 }, uColor: { value: new THREE.Color(color) }, uOpacity: { value: 1 } } }));
     this.dots.frustumCulled = false;
     this.group = new THREE.Group(); this.group.add(this.core, this.glow, this.dots); scene.add(this.group);
-    this.baseOp = [1, .18];
+    this.baseOp = [1, .22];
   }
   update(t, { op = 1, draw = 1, speed = .2, dir = 1 } = {}) {
     this.group.visible = op > .002;
@@ -322,57 +315,94 @@ class Flow {
 }
 // scene 5 lanes
 const ISSUER = [-4.5, -0.35, 0], HOLDERS = [4.5, -0.35, 0];
-const laneBank = new Flow([ISSUER, [-2.6, 0.7, 0], [0, 1.0, 0], [2.6, 0.7, 0], HOLDERS], { color: '#8a94a8', radius: .01, dots: 7, dotSize: 20, glow: 3 });
-const laneChain = new Flow([ISSUER, [-2.4, -1.3, 0.25], [0, -1.45, 0.35], [2.4, -1.3, 0.25], HOLDERS], { color: '#3d8bff', radius: .024, dots: 18, dotSize: 30 });
+const laneBank = new Flow([ISSUER, [-2.6, 0.7, 0], [0, 1.0, 0], [2.6, 0.7, 0], HOLDERS], { color: '#9aa0b8', radius: .012, dots: 7, dotSize: 22, glow: 3 });
+const laneChain = new Flow([ISSUER, [-2.4, -1.3, 0.25], [0, -1.45, 0.35], [2.4, -1.3, 0.25], HOLDERS], { color: '#6a5cff', radius: .026, dots: 18, dotSize: 30 });
 // scene 7 beams
-const beamL = new Flow([[-3.05, 0.4, 0], [-1.9, 0.62, 0.15], [-0.9, 0.42, 0]], { color: '#7cc4ff', radius: .018, dots: 8, dotSize: 28 });
-const beamR = new Flow([[3.05, 0.4, 0], [1.9, 0.62, 0.15], [0.9, 0.42, 0]], { color: '#7cc4ff', radius: .018, dots: 8, dotSize: 28 });
+const beamL = new Flow([[-3.05, 0.4, 0], [-1.9, 0.62, 0.15], [-0.9, 0.42, 0]], { color: '#8b6cff', radius: .02, dots: 8, dotSize: 28 });
+const beamR = new Flow([[3.05, 0.4, 0], [1.9, 0.62, 0.15], [0.9, 0.42, 0]], { color: '#c04fd0', radius: .02, dots: 8, dotSize: 28 });
 // scene 9 bridge
-const bridge = new Flow([[-2.85, -0.55, 0], [-1.4, -0.42, 0], [0, -0.55, 0], [1.4, -0.42, 0], [2.95, -0.55, 0]], { color: '#5aa8ff', radius: .03, dots: 22, dotSize: 30, glow: 5 });
+const bridge = new Flow([[-2.85, -0.55, 0], [-1.4, -0.42, 0], [0, -0.55, 0], [1.4, -0.42, 0], [2.95, -0.55, 0]], { color: '#6a5cff', radius: .032, dots: 22, dotSize: 30, glow: 4 });
 
 // ring nodes (holders S5 / SBI S7)
 function ringNode(color) {
   const g = new THREE.Group();
-  const mat = new THREE.MeshBasicMaterial({ color, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false });
+  const mat = new THREE.MeshBasicMaterial({ color, transparent: true, depthWrite: false });
   const r1 = new THREE.Mesh(new THREE.TorusGeometry(.62, .014, 12, 128), mat);
   const r2 = new THREE.Mesh(new THREE.TorusGeometry(.78, .006, 8, 128), mat.clone()); r2.material.opacity = .5;
   g.add(r1, r2);
-  const h = halo(3.2, .4, '#3d7dff'); g.add(h);
+  const h = halo(3.2, .55, '#ffffff'); g.add(h);
   g.userData = { r1, r2, mat };
   scene.add(g); return g;
 }
-const holders = ringNode('#7cc4ff');
-const holderDots = new THREE.InstancedMesh(new THREE.SphereGeometry(.07, 16, 12), new THREE.MeshPhysicalMaterial({ color: '#cfe6ff', emissive: '#5aa8ff', emissiveIntensity: 1.2, metalness: .2, roughness: .3 }), 7);
+const holders = ringNode('#7b6cff');
+const holderDots = new THREE.InstancedMesh(new THREE.SphereGeometry(.07, 16, 12), new THREE.MeshPhysicalMaterial({ color: '#ffffff', emissive: '#b9a8ff', emissiveIntensity: .35, metalness: .2, roughness: .2, iridescence: 1 }), 7);
 holders.add(holderDots);
-const sbiRing = ringNode('#7cc4ff');
+const sbiRing = ringNode('#c04fd0');
 
 // orbit (S6)
 const orbit = new THREE.Group(); scene.add(orbit);
-const orbitRing = new THREE.Mesh(new THREE.TorusGeometry(1.62, .008, 8, 200), new THREE.MeshBasicMaterial({ color: '#7cc4ff', transparent: true, opacity: .7, blending: THREE.AdditiveBlending, depthWrite: false }));
+const orbitRing = new THREE.Mesh(new THREE.TorusGeometry(1.62, .008, 8, 200), new THREE.MeshBasicMaterial({ color: '#8b7cff', transparent: true, opacity: .7, depthWrite: false }));
 orbit.add(orbitRing);
 const sats = [0, 1, 2, 3].map(i => {
-  const m = new THREE.Mesh(new THREE.SphereGeometry(.09, 24, 16), new THREE.MeshPhysicalMaterial({ color: '#ffffff', emissive: '#7cc4ff', emissiveIntensity: 2, roughness: .2 }));
-  m.add(halo(1.1, .8, '#7cc4ff')); orbit.add(m); return m;
+  const m = new THREE.Mesh(new THREE.SphereGeometry(.09, 24, 16), new THREE.MeshPhysicalMaterial({ color: '#ffffff', emissive: '#d8ccff', emissiveIntensity: .3, roughness: .1, iridescence: 1, iridescenceIOR: 1.7 }));
+  m.add(halo(1.3, .9, '#ffffff')); orbit.add(m); return m;
 });
+
+// iridescent soap bubbles (theme)
+const bubbleVS = `varying vec3 vN; varying vec3 vV; void main(){ vec4 mv=modelViewMatrix*vec4(position,1.); vN=normalize(normalMatrix*normal); vV=normalize(-mv.xyz); gl_Position=projectionMatrix*mv; }`;
+const bubbleFS = `uniform float uTime,uOp,uSeed; varying vec3 vN; varying vec3 vV;
+  vec3 hue(float h){ return .5+.5*cos(6.28318*(h+vec3(0.,.33,.67))); }
+  void main(){ vec3 n=normalize(vN); float f=1.-max(dot(n,vV),0.); float fr=pow(f,2.);
+    vec3 ir=mix(vec3(1.),hue(f*1.4+n.y*.45+n.x*.2+uTime*.04+uSeed),.62);
+    vec3 R=reflect(-vV,n);
+    float sp=pow(max(dot(R,normalize(vec3(-.45,.6,.65))),0.),70.)*1.4+pow(max(dot(R,normalize(vec3(.5,-.45,.7))),0.),18.)*.3;
+    float a=.05+fr*.85+sp; vec3 col=mix(ir,vec3(1.),clamp(sp,0.,1.));
+    gl_FragColor=vec4(col,clamp(a,0.,1.)*uOp); }`;
+const bubbleGeo = new THREE.SphereGeometry(1, 48, 32);
+const bubbles = [];
+{
+  const r = rng(21);
+  for (let i = 0; i < 12; i++) {
+    const m = new THREE.Mesh(bubbleGeo, new THREE.ShaderMaterial({ vertexShader: bubbleVS, fragmentShader: bubbleFS, transparent: true, depthWrite: false, uniforms: { uTime: { value: 0 }, uOp: { value: 1 }, uSeed: { value: r() } } }));
+    m.userData = i === 0 ? { hero: true } : { x: (r() - .5) * 2, y: r(), z: -16 + r() * 13, s: .3 + r() * .8, sp: r(), ph: r() * 6.28 };
+    m.renderOrder = 5; scene.add(m); bubbles.push(m);
+  }
+}
+function updateBubbles(t) {
+  for (const b of bubbles) {
+    const u = b.userData; b.material.uniforms.uTime.value = t;
+    if (u.hero) { b.position.set(6.05 + Math.sin(t * .5) * .08, -2.75 + Math.sin(t * .7) * .1, .5); b.scale.setScalar(.95); continue; }
+    const d = 10 - u.z, hh = d * .3153, hw = hh * 1.778;
+    const yy = (u.y + t * .012 * (1 + u.sp * 1.5)) % 1;
+    b.position.set(u.x * hw * 1.05 + Math.sin(t * .4 + u.ph) * .35, -hh * 1.3 + yy * hh * 2.6, u.z);
+    b.scale.setScalar(u.s * d / 11);
+  }
+}
 
 // background gradient plane (child of camera)
 const bgMat = new THREE.ShaderMaterial({
   uniforms: { uTime: { value: 0 }, uWarm: { value: 0 }, uBoost: { value: 0 } }, depthWrite: false,
   vertexShader: `varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.); }`,
   fragmentShader: `uniform float uTime,uWarm,uBoost; varying vec2 vUv;
-    void main(){ vec2 p=vUv-.5; p.x*=1.78;
-      vec3 blue=vec3(.004,.022,.085), amber=vec3(.07,.022,.002);
-      vec3 c1=mix(blue,amber,uWarm);
-      vec2 a=vec2(.55*sin(uTime*.07),.16*cos(uTime*.09)+.05), b=vec2(-.62+.1*sin(uTime*.05),-.28);
-      float b1=exp(-dot(p-a,p-a)*3.2), b2=exp(-dot(p-b,p-b)*4.5), b3=exp(-dot(p,p)*1.4);
-      vec3 col=vec3(.0015,.002,.006)+c1*b1*.9+mix(vec3(.0,.012,.04),vec3(.03,.008,.0),uWarm)*b2+c1*b3*.2*(1.+uBoost*2.5);
+    vec3 blob(vec3 col, vec3 c, vec2 p, vec2 at, float k, float w){ vec2 d=p-at; return mix(col, c, w*exp(-dot(d,d)*k)); }
+    void main(){ vec2 p=vUv-.5; p.x*=1.78; float T=uTime;
+      vec3 col=vec3(.93,.915,.975);
+      vec3 pink=mix(vec3(.94,.62,.84),vec3(1.,.66,.6),uWarm), mint=mix(vec3(.62,.93,.8),vec3(1.,.8,.62),uWarm*.7);
+      vec3 aqua=vec3(.66,.9,.95), lav=mix(vec3(.8,.72,.97),vec3(.98,.72,.8),uWarm), sky=vec3(.74,.85,.99);
+      col=blob(col,sky,p,vec2(-.55+.08*sin(T*.05),.05+.1*cos(T*.06)),3.,.75);
+      col=blob(col,pink,p,vec2(.1+.25*sin(T*.04),.3+.05*cos(T*.07)),4.,.8);
+      col=blob(col,mint,p,vec2(.75+.06*cos(T*.05),.25*sin(T*.045)),3.2,.85);
+      col=blob(col,lav,p,vec2(-.7+.1*cos(T*.03),-.32),4.5,.8);
+      col=blob(col,aqua,p,vec2(.55,-.38+.06*sin(T*.06)),4.,.7);
+      col=blob(col,pink,p,vec2(-.2+.2*cos(T*.035),-.45),6.,.55);
+      col=blob(col,vec3(1.),p,vec2(.0,.0),2.5,.45+uBoost*.4);
       gl_FragColor=vec4(col,1.); }`,
 });
 const bg = new THREE.Mesh(new THREE.PlaneGeometry(90, 52), bgMat); bg.position.z = -60; camera.add(bg); bg.renderOrder = -10;
 
 // grid floor
 const gridMat = new THREE.ShaderMaterial({
-  transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, extensions: { derivatives: true },
+  transparent: true, depthWrite: false, extensions: { derivatives: true },
   uniforms: { uScroll: { value: 0 }, uOp: { value: 1 }, uColor: { value: new THREE.Color('#2f7dff') }, uTime: { value: 0 } },
   vertexShader: `varying vec3 vW; void main(){ vec4 w=modelMatrix*vec4(position,1.); vW=w.xyz; gl_Position=projectionMatrix*viewMatrix*w; }`,
   fragmentShader: `uniform float uScroll,uOp,uTime; uniform vec3 uColor; varying vec3 vW;
@@ -382,15 +412,15 @@ const gridMat = new THREE.ShaderMaterial({
       float d=length(vW.xz-vec2(0.,4.));
       float fade=smoothstep(42.,6.,d)*smoothstep(0.,6.,d);
       float sweep=smoothstep(1.2,0.,abs(fract(p.y*.04-uTime*.12)-.5)*25.);
-      gl_FragColor=vec4(uColor*(g*(.7+sweep*1.5))*fade*uOp,1.); }`,
+      gl_FragColor=vec4(uColor,clamp(g*(.7+sweep*1.2)*fade*uOp*.55,0.,1.)); }`,
 });
 const grid = new THREE.Mesh(new THREE.PlaneGeometry(160, 160), gridMat); grid.rotation.x = -Math.PI / 2; grid.position.y = -2.7; scene.add(grid);
 
 // particles
 const PN = 2600;
 const partMat = new THREE.ShaderMaterial({
-  transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
-  uniforms: { uTime: { value: 0 }, uWarp: { value: 0 }, uPix: { value: H / 2 }, uA: { value: new THREE.Color('#4d94ff') }, uB: { value: new THREE.Color('#e8f3ff') }, uOp: { value: 1 } },
+  transparent: true, depthWrite: false,
+  uniforms: { uTime: { value: 0 }, uWarp: { value: 0 }, uPix: { value: H / 2 }, uA: { value: new THREE.Color('#4d94ff') }, uB: { value: new THREE.Color('#ff9ad5') }, uOp: { value: 1 } },
   vertexShader: `attribute vec3 aVel; attribute float aSeed; uniform float uTime,uWarp,uPix; varying float vA; varying float vS;
     void main(){ vec3 box=vec3(44.,26.,70.); vec3 p=position+aVel*uTime; p.z+=uWarp;
       p=mod(p+box*.5,box)-box*.5; p.z-=18.;
@@ -399,7 +429,7 @@ const partMat = new THREE.ShaderMaterial({
       gl_PointSize=uPix*(.035+aSeed*.06)/-mv.z*(1.+min(uWarp*0.,0.));
       vA=tw*smoothstep(70.,10.,-mv.z)*smoothstep(.5,4.,-mv.z); vS=aSeed; }`,
   fragmentShader: `uniform vec3 uA,uB; uniform float uOp; varying float vA; varying float vS;
-    void main(){ float d=length(gl_PointCoord-.5); float a=smoothstep(.5,0.,d); a*=a; vec3 c=mix(uA,uB,step(.72,vS)); gl_FragColor=vec4(c*a*vA*uOp*1.4,1.); }`,
+    void main(){ float d=length(gl_PointCoord-.5); float a=smoothstep(.5,0.,d); a*=a; vec3 c=mix(uA,uB,step(.72,vS)); gl_FragColor=vec4(mix(vec3(1.),c,.8),a*vA*uOp*.75); }`,
 });
 {
   const r = rng(7), pos = new Float32Array(PN * 3), vel = new Float32Array(PN * 3), seed = new Float32Array(PN);
@@ -413,7 +443,7 @@ const partMat = new THREE.ShaderMaterial({
 }
 // warp streaks
 const STREAKS = 320;
-const streakMat = new THREE.MeshBasicMaterial({ color: '#9cc8ff', transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
+const streakMat = new THREE.MeshBasicMaterial({ color: '#a99bff', transparent: true, opacity: 0, depthWrite: false });
 const streaks = new THREE.InstancedMesh(new THREE.BoxGeometry(.018, .018, 1), streakMat, STREAKS); streaks.frustumCulled = false; scene.add(streaks);
 const streakSeed = (() => { const r = rng(42); return Array.from({ length: STREAKS }, () => { const a = r() * Math.PI * 2, rad = 2.5 + r() * 14; return [Math.cos(a) * rad, Math.sin(a) * rad * .7, r() * 90]; }); })();
 
@@ -667,7 +697,7 @@ function updateDOM(t) {
   hud.style.opacity = clamp((t - 1.2) / 1) * (1 - clamp((t - R('end+1.5')) / .8) * .6);
 
   // transition flash, glitch, fade to black
-  flash.style.opacity = TRANSITIONS.reduce((a, c) => a + gauss(t, c, .09), 0) * .32 + gauss(t, 3.0, .12) * .25;
+  flash.style.opacity = TRANSITIONS.reduce((a, c) => a + gauss(t, c, .09), 0) * .6 + gauss(t, 3.0, .12) * .45;
   const g = gauss(t, R('s8'), .22) + gauss(t, R('s8+0.45'), .07) * .6;
   const fi = Math.floor(t * 30), r = rng(fi + 11);
   dom.style.transform = g > .05 ? `translate(${(r() - .5) * 40 * g}px,${(r() - .5) * 10 * g}px)` : '';
@@ -685,20 +715,21 @@ function frame(t) {
   updateCamera(t);
   for (const n of Object.keys(OBJ)) applyObj(n, t);
   updateCoins(t);
+  updateBubbles(t);
 
   const warm = E.io(clamp((t - R('s8-0.15')) / .7)) * (1 - E.io(clamp((t - R('s8.e-0.3')) / .7)));
   bgMat.uniforms.uTime.value = t; bgMat.uniforms.uWarm.value = warm; bgMat.uniforms.uBoost.value = pulse(t, .3);
-  amberL.intensity = warm * 120; rimBlue.intensity = 90 * (1 - warm * .7);
-  fiveMat.emissive.set(warm > .5 ? '#ff7a1a' : '#1d5cff'); fiveMat.color.set(warm > .5 ? '#ffd29a' : '#9cc3ff');
-  five.userData.halo.material.color.set(warm > .5 ? '#ff9a3d' : '#3d7dff');
-  gridMat.uniforms.uColor.value.set(warm > .5 ? '#ff8a2e' : '#2f7dff');
-  partMat.uniforms.uA.value.set(warm > .5 ? '#ff9f4a' : '#4d94ff');
+  amberL.intensity = warm * 35; rimBlue.intensity = 60 * (1 - warm * .5);
+  fiveMat.color.set(warm > .5 ? '#ffd6cc' : '#e9e4ff');
+  five.userData.halo.material.color.set(warm > .5 ? '#ffd0c8' : '#ffffff');
+  gridMat.uniforms.uColor.value.set(warm > .5 ? '#ff7a6b' : '#8f7dff');
+  partMat.uniforms.uA.value.set(warm > .5 ? '#ff8a7a' : '#9b8cff');
 
   // warp
   const w = warpOffset(t);
   partMat.uniforms.uTime.value = t; partMat.uniforms.uWarp.value = w;
   const ws = warpSpeed(t), wI = clamp((ws - 3) / 18);
-  streakMat.opacity = wI * .85; streaks.visible = wI > .01;
+  streakMat.opacity = wI * .6; streaks.visible = wI > .01;
   if (streaks.visible) {
     for (let i = 0; i < STREAKS; i++) {
       const [x, y, z0] = streakSeed[i]; const z = ((z0 + w * 1.6) % 90) - 80;
@@ -711,11 +742,11 @@ function frame(t) {
   const gridBase = { s1: 1, s2: .35, s3: .5, s4: .3, s5: .22, s6: .3, s7: .3, s8: .45, s9: .4, end: .8 }[sc.id];
   gridMat.uniforms.uOp.value = clamp(t / 2.5) * (gridBase + pulse(t, .4) * .8);
 
-  bloom.strength = .42 + pulse(t, .3) * .6 + (t < 3.5 ? (1 - t / 3.5) * .5 : 0);
+  bloom.strength = .25 + pulse(t, .3) * .25 + (t < 3.5 ? (1 - t / 3.5) * .2 : 0);
 
   // halos breathing
-  jp.userData.halo.material.opacity = .26 + .07 * Math.sin(t * 1.7);
-  st.userData.halo.material.opacity = .18 + .05 * Math.sin(t * 1.3 + 1);
+  jp.userData.halo.material.opacity = .55 + .1 * Math.sin(t * 1.7);
+  st.userData.halo.material.opacity = .45 + .08 * Math.sin(t * 1.3 + 1);
 
   // S5 lanes & holders
   const s5a = R('s5.1'), s5b = R('s5.2'), s5e = R('s5.e');
